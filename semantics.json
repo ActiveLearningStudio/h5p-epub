@@ -1,0 +1,9 @@
+[
+  {
+    "name": "file",
+    "type": "file",
+    "label": "ePub Document(.epub file)",
+    "importance": "high",
+    "disableCopyright": true
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "title": "ePub Dcoument",
+  "description": "Curriki H5P for ePub Document",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
+  "runnable": 1,
+  "fullscreen": 1,
+  "author": "yuvaraj",
+  "license": "",
+  "machineName": "H5P.EPubDocument",
+  "embedTypes": [
+    "div",
+    "iframe"
+  ],
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 0
+  },
+  "preloadedJs": [
+    {
+      "path": "epub-library/jszip.min.js"
+    },
+    {
+      "path": "epub-library/epub.min.js"
+    },
+    {
+      "path": "epub-document.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "epub-document.css"
+    }
+  ]
+}
