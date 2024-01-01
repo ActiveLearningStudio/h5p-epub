@@ -10,7 +10,6 @@
   "license": "",
   "machineName": "H5P.EPubDocument",
   "embedTypes": [
-    "div",
     "iframe"
   ],
   "coreApi": {
