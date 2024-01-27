@@ -16,10 +16,6 @@ var H5P = H5P || {};
     if (params.chapter) {
       this.chapter = params.chapter;
     }
-    
-    if (params.behaviour && params.behaviour.end) {
-      this.endPage = params.behaviour.end;
-    }
 
   };
 
@@ -75,28 +71,23 @@ var H5P = H5P || {};
       height: 600,
     });
 
-
-    self.chapter ? rendition.display(self.chapter) : rendition.display();
+    var displayed = self.chapter ? rendition.display(self.chapter) : rendition.display();
+    displayed.then(function(renderer){
+      self.trigger('resize');
+    });
+    
     // Navigation loaded
     book.loaded.navigation.then(function(toc){
       console.log(toc);
     });
 
-    nextArrow.addEventListener("click", function(e){
-      if (book.package.metadata.direction === "rtl") {
-        rendition.prev();
-      } else {
-        rendition.next();
-      }
+    nextArrow.addEventListener("click", function(){
+      book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
       e.preventDefault();
     }, false);
 
-    prevArrow.addEventListener("click", function(e){
-      if (book.package.metadata.direction === "rtl") {
-        rendition.next();
-      } else {
-        rendition.prev();
-      }
+    prevArrow.addEventListener("click", function(){
+      book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
       e.preventDefault();
     }, false);
 
@@ -104,20 +95,12 @@ var H5P = H5P || {};
 
       // Left Key
       if ((e.keyCode || e.which) === 37) {
-        if (book.package.metadata.direction === "rtl")  {
-          rendition.next();
-        } else {
-          rendition.prev();
-        }
+        book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
       }
 
       // Right Key
       if ((e.keyCode || e.which) === 39) {
-        if (book.package.metadata.direction === "rtl") {
-          rendition.prev();
-        } else {
-          rendition.next();
-        }
+        book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
       }
 
     };
@@ -151,14 +134,6 @@ var H5P = H5P || {};
       }
       self.trigger('resize');
 
-    });
-
-    rendition.on("layout", function(layout) {
-      if (layout.spread) {
-        self.$epub.removeClass('single');
-      } else {
-        self.$epub.addClass('single');
-      }
     });
 
     window.addEventListener("unload", function () {
