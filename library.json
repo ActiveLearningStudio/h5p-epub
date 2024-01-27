@@ -31,5 +31,12 @@
     {
       "path": "epub-document.css"
     }
+  ],
+  "editorDependencies": [
+    {
+      "machineName": "H5PEditor.SelectEpubChapter",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
   ]
 }

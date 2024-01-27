@@ -12,6 +12,15 @@ var H5P = H5P || {};
     H5P.EventDispatcher.call(this);
     this.extras = extras;
     this.source = H5P.getPath(params.file.path, id);
+
+    if (params.chapter) {
+      this.chapter = params.chapter;
+    }
+    
+    if (params.behaviour && params.behaviour.end) {
+      this.endPage = params.behaviour.end;
+    }
+
   };
 
   H5P.EPubDocument.prototype = Object.create(H5P.EventDispatcher.prototype);
@@ -35,7 +44,6 @@ var H5P = H5P || {};
 
     self.$epub = $('<div>', {
       id: 'viewer' ,
-      class: 'spread',
       on: {
         load: function () {
           self.trigger('loaded');
@@ -56,7 +64,6 @@ var H5P = H5P || {};
     nextArrow.className = "arrow";
     nextArrow.innerHTML = "›";
 
-
     // Append the elements to the container
     self.$epubContainer.append(prevArrow);
     self.$epubContainer.append(nextArrow);
@@ -66,25 +73,30 @@ var H5P = H5P || {};
     var rendition = book.renderTo(self.$epub[0], {
       width:  900,
       height: 600,
-      spread: "always"
-    });
-    var displayed = rendition.display();
-    displayed.then(function(renderer){
-      self.trigger('resize');
     });
 
+
+    self.chapter ? rendition.display(self.chapter) : rendition.display();
     // Navigation loaded
     book.loaded.navigation.then(function(toc){
       console.log(toc);
     });
 
-    nextArrow.addEventListener("click", function(){
-      book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+    nextArrow.addEventListener("click", function(e){
+      if (book.package.metadata.direction === "rtl") {
+        rendition.prev();
+      } else {
+        rendition.next();
+      }
       e.preventDefault();
     }, false);
 
-    prevArrow.addEventListener("click", function(){
-      book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+    prevArrow.addEventListener("click", function(e){
+      if (book.package.metadata.direction === "rtl") {
+        rendition.next();
+      } else {
+        rendition.prev();
+      }
       e.preventDefault();
     }, false);
 
@@ -92,12 +104,20 @@ var H5P = H5P || {};
 
       // Left Key
       if ((e.keyCode || e.which) === 37) {
-        book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+        if (book.package.metadata.direction === "rtl")  {
+          rendition.next();
+        } else {
+          rendition.prev();
+        }
       }
 
       // Right Key
       if ((e.keyCode || e.which) === 39) {
-        book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+        if (book.package.metadata.direction === "rtl") {
+          rendition.prev();
+        } else {
+          rendition.next();
+        }
       }
 
     };
@@ -112,22 +132,24 @@ var H5P = H5P || {};
     });
 
     rendition.on("relocated", function(location){
-      console.log(location);
-
+      console.log(location.start.location);
       var next = book.package.metadata.direction === "rtl" ? prevArrow : nextArrow;
       var prev = book.package.metadata.direction === "rtl" ? nextArrow : prevArrow;
 
-      if (location.atEnd) {
+      var isEndOfSelectedChapter = location.end.displayed.page === location.end.displayed.total;
+      var isStartOfSelectedChapter = location.start.displayed.page === 1;
+      if (location.atEnd || isEndOfSelectedChapter) {
         next.style.visibility = "hidden";
       } else {
         next.style.visibility = "visible";
       }
 
-      if (location.atStart) {
+      if (location.atStart || isStartOfSelectedChapter) {
         prev.style.visibility = "hidden";
       } else {
         prev.style.visibility = "visible";
       }
+      self.trigger('resize');
 
     });
 
@@ -140,7 +162,6 @@ var H5P = H5P || {};
     });
 
     window.addEventListener("unload", function () {
-      console.log("unloading");
       book.destroy();
     });
 

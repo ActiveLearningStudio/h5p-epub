@@ -4,6 +4,16 @@
     "type": "file",
     "label": "ePub Document(.epub file)",
     "importance": "high",
-    "disableCopyright": true
+    "disableCopyright": true,
+    "mimes": [
+      "application/epub+zip"
+    ]
+  },
+  {
+    "name": "chapter",
+    "type": "select",
+    "widget": "selectEpubChapter",
+    "label": "Chapter",
+    "importance": "high"
   }
 ]

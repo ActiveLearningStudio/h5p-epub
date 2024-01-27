@@ -49,7 +49,7 @@
 }
 
 .arrow {
-  position: fixed;
+  position: absolute;
   top: 50%;
   margin-top: -32px;
   font-size: 64px;
