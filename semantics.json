@@ -6,7 +6,8 @@
     "importance": "high",
     "disableCopyright": true,
     "mimes": [
-      "application/epub+zip"
+      "application/epub+zip",
+      "application/zip"
     ]
   },
   {
