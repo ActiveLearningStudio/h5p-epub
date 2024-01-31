@@ -81,12 +81,12 @@ var H5P = H5P || {};
       console.log(toc);
     });
 
-    nextArrow.addEventListener("click", function(){
+    nextArrow.addEventListener("click", function(e){
       book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
       e.preventDefault();
     }, false);
 
-    prevArrow.addEventListener("click", function(){
+    prevArrow.addEventListener("click", function(e){
       book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
       e.preventDefault();
     }, false);
@@ -119,8 +119,14 @@ var H5P = H5P || {};
       var next = book.package.metadata.direction === "rtl" ? prevArrow : nextArrow;
       var prev = book.package.metadata.direction === "rtl" ? nextArrow : prevArrow;
 
-      var isEndOfSelectedChapter = location.end.displayed.page === location.end.displayed.total;
-      var isStartOfSelectedChapter = location.start.displayed.page === 1;
+      var isEndOfSelectedChapter = false;
+      var isStartOfSelectedChapter = false;
+
+      if (self.chapter) {
+        isEndOfSelectedChapter = location.end.displayed.page === location.end.displayed.total;
+        isStartOfSelectedChapter = location.start.displayed.page === 1;
+      }
+
       if (location.atEnd || isEndOfSelectedChapter) {
         next.style.visibility = "hidden";
       } else {
